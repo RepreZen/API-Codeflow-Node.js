@@ -9,6 +9,7 @@ import com.reprezen.kaizen.oasparser.model3.RequestBody
 import com.reprezen.kaizen.oasparser.model3.Tag
 import com.reprezen.kaizen.oasparser.ovl3.PathImpl
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.HashSet
 import java.util.IdentityHashMap
 import java.util.List
@@ -23,6 +24,23 @@ class ModelHelper {
 		result.addAll(model.tags.map[it.name])
 		result.addAll(model.allOperations.map[it.tags].flatten)
 		result.toSet
+	}
+
+	def getOperationsByTag(OpenApi3 model) {
+		val used = new HashSet<Operation>
+		val result = new HashMap<String, List<Operation>>()
+		for (tag : model.allTags) {
+			val tagOps = model.allOperations.filter[it.tags.contains(tag)].filter[!used.contains(it)]
+			if (!tagOps.empty) {
+				result.put(tag, tagOps.toList)
+				used.addAll(tagOps)
+			}
+		}
+		val noTagOps = model.allOperations.filter[!used.contains(it)]
+		if (!noTagOps.empty) {
+			result.put(null, noTagOps.toList)
+		}
+		result
 	}
 
 	def getAllOperations(OpenApi3 model) {
@@ -95,9 +113,14 @@ abstract class NameHelper<T> {
 }
 
 class ModuleNameHelper extends NameHelper<String> {
+	extension ModelHelper = new ModelHelper
 
 	def getModuleName(String tagName) {
 		getName(tagName)
+	}
+
+	def getAllModuleNames(OpenApi3 model) {
+		model.allTags.map[it.moduleName]
 	}
 
 	override protected getPreferredName(String tagName) {
@@ -165,7 +188,7 @@ class ParamsHelper {
 	}
 
 	def getParameterNameList(Operation op) {
-		op.allParameters.map[
+		op.allParameters.map [
 			switch it {
 				Parameter: it.paramName
 				RequestBody: "body"

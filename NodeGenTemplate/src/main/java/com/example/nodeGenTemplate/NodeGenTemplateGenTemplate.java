@@ -1,10 +1,10 @@
 package com.example.nodeGenTemplate;
             
 import com.modelsolv.reprezen.generators.api.GenerationException;
-import com.modelsolv.reprezen.generators.api.openapi3.OpenApi3GenTemplate;
+import com.modelsolv.reprezen.generators.api.openapi.OpenApiGenTemplate;
             
 
-public class NodeGenTemplateGenTemplate extends OpenApi3GenTemplate {
+public class NodeGenTemplateGenTemplate extends OpenApiGenTemplate {
           
     @Override
     public String getName() {
@@ -17,11 +17,16 @@ public class NodeGenTemplateGenTemplate extends OpenApi3GenTemplate {
     
     @Override
     public void configure() throws GenerationException {
-        defineOpenApi3Source();
+        defineOpenApiSource();
+        define(dynamicGenerator().named("app") //
+        		.using(AppGenerator.class));
         define(dynamicGenerator().named("controllers") //
                 .using(ControllersGenerator.class));
-        define(dynamicGenerator().named("Handlers") //
+        define(dynamicGenerator().named("handlers") //
                 .using(HandlersGenerator.class));
+        define(dynamicGenerator().named("model") //
+        		.using(ModelGenerator.class));
+        define(staticResource().copying("code").to("."));
         
     }
 }

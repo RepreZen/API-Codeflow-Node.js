@@ -1,39 +1,21 @@
 package com.example.nodeGenTemplate
 
 import com.modelsolv.reprezen.generators.api.GenerationException
-import com.modelsolv.reprezen.generators.api.openapi3.OpenApi3DynamicGenerator
+import com.modelsolv.reprezen.generators.api.openapi.OpenApiDocument
+import com.modelsolv.reprezen.generators.api.template.AbstractDynamicGenerator
 import com.modelsolv.reprezen.generators.api.template.IGenTemplateContext
-import com.reprezen.kaizen.oasparser.model3.OpenApi3
 import com.reprezen.kaizen.oasparser.model3.Operation
 import com.reprezen.kaizen.oasparser.model3.Parameter
 import com.reprezen.kaizen.oasparser.model3.RequestBody
-import java.util.HashSet
 import java.util.List
 
-class ControllersGenerator extends OpenApi3DynamicGenerator {
+class ControllersGenerator extends AbstractDynamicGenerator<OpenApiDocument> {
 	extension ModelHelper = new ModelHelper
 	extension ModuleNameHelper = new ModuleNameHelper
 
-	var OpenApi3 model
-	val generatedOps = new HashSet<Operation>()
-
-	override generate(OpenApi3 model) throws GenerationException {
-		this.model = model;
-		for (tag : model.allTags) {
-			generate(tag, model)
-		}
-		generate(null, model)
-	}
-
-	def private generate(String tag, OpenApi3 model) {
-		val allOps = model.paths.values.map[path|path.operations.values].flatten.toList
-		// filter for matching tag if provided tag is not null
-		val tagOps = allOps.filter[tag === null || it.tags.contains(tag)].toList
-		// skip already-generated operations
-		val ops = tagOps.filter[!generatedOps.contains(it)]
-		if (!ops.empty) {
-			new ControllersFile(context, tag.moduleName, ops.toList).generate()
-			generatedOps.addAll(ops)
+	override generate(OpenApiDocument model) throws GenerationException {
+		for (entry: model.asKaizenOpenApi3.operationsByTag.entrySet) {
+			new ControllersFile(context, entry.key.moduleName, entry.value).generate			
 		}
 	}
 }
@@ -55,6 +37,7 @@ class ControllersFile extends GeneratedFile {
 	override getContent() {
 		'''
 			// jshint esversion:6, latedef:nofunc
+			"use strict";
 			
 			const router = require('express').Router();
 			const «name»Handler = require('../handlers/«name»');
@@ -64,9 +47,9 @@ class ControllersFile extends GeneratedFile {
 			«ENDFOR»
 			
 			function handle(res, response) {
-				res.status(response ? 200 : 201);
-				if (response) {
-					res.json(response);
+				if (!res.headersSent) {
+					res.status(response === undefined ? 201 : 200);
+					return response === undefined ? res.end() : res.json(response);
 				}
 			}
 			
@@ -79,7 +62,7 @@ class ControllersFile extends GeneratedFile {
 			router.«op.method»('«op.path.expressPathString»', (req, res) => {
 				new «moduleName»Handler(req.app.locals.db).«op.methodName»(«op.argList.join(", ")»)
 				.then((response) => handle(res, response))
-				.catch((error) => res.status(error.code).send(error.message));
+				.catch((error) => res.status(error.code).json(error));
 			});
 		'''
 	}

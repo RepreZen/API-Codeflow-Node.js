@@ -1,0 +1,24 @@
+{
+  "name": "PetStore",
+  "version": "0.1.0",
+  "description": "PetStore",
+  "main": "hello-world-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified! Configure in package.json\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "node.js",
+    "eclipse",
+    "nodeclipse"
+  ],
+  "author": "",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "express": ">=4 <5",
+    "body-parser": ">=1 <2",
+    "cookie-parser": ">=1 <2",
+    "swagger-ui-express": ">=4 <5"
+  }
+}

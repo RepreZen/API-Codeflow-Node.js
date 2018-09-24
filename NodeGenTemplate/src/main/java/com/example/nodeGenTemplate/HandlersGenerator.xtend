@@ -1,37 +1,19 @@
 package com.example.nodeGenTemplate
 
 import com.modelsolv.reprezen.generators.api.GenerationException
-import com.modelsolv.reprezen.generators.api.openapi3.OpenApi3DynamicGenerator
+import com.modelsolv.reprezen.generators.api.openapi.OpenApiDocument
+import com.modelsolv.reprezen.generators.api.template.AbstractDynamicGenerator
 import com.modelsolv.reprezen.generators.api.template.IGenTemplateContext
-import com.reprezen.kaizen.oasparser.model3.OpenApi3
 import com.reprezen.kaizen.oasparser.model3.Operation
-import java.util.HashSet
 import java.util.List
 
-class HandlersGenerator extends OpenApi3DynamicGenerator {
+class HandlersGenerator extends AbstractDynamicGenerator<OpenApiDocument> {
 	extension ModelHelper = new ModelHelper
 	extension ModuleNameHelper = new ModuleNameHelper
 
-	var OpenApi3 model
-	val generatedOps = new HashSet<Operation>()
-
-	override generate(OpenApi3 model) throws GenerationException {
-		this.model = model;
-		for (tag : model.allTags) {
-			generate(tag, model)
-		}
-		generate(null, model)
-	}
-
-	def private generate(String tag, OpenApi3 model) {
-		val allOps = model.paths.values.map[path|path.operations.values].flatten.toList
-		// filter for matching tag if provided tag is not null
-		val tagOps = allOps.filter[tag === null || it.tags.contains(tag)].toList
-		// skip already-generated operations
-		val ops = tagOps.filter[!generatedOps.contains(it)]
-		if (!ops.empty) {
-			new HandlersFile(context, tag.moduleName, ops.toList).generate()
-			generatedOps.addAll(ops)
+	override generate(OpenApiDocument model) throws GenerationException {
+		for (entry : model.asKaizenOpenApi3.operationsByTag.entrySet) {
+			new HandlersFile(context, entry.key.moduleName, entry.value).generate
 		}
 	}
 }
@@ -52,6 +34,7 @@ class HandlersFile extends GeneratedFile {
 	override getContent() {
 		'''
 			// jshint esversion:6, latedef:nofunc
+			"use strict";
 					
 			class «name»Handler {
 				constructor(db) {
@@ -66,16 +49,18 @@ class HandlersFile extends GeneratedFile {
 			«FOR paramName : operations.map[it.parameterNameList].flatten.toSet SEPARATOR "\n"»
 				«paramName.getValidatorSample»
 			«ENDFOR»
+			
+			module.exports = «name»Handler;
 		'''
 	}
 
 	def private getContent(Operation op) {
 		'''
-			«op.methodName»(«op.parameterNameList») {
+			«op.methodName»(«op.parameterNameList.join(", ")») {
 				// sample code
 				try {
 					«FOR param : op.parameterNameList»
-						«param» = validate_«param»(«param»)
+						«param» = validate_«param»(«param»);
 					«ENDFOR»
 				} catch(error) {
 					return Promise.reject(error);
