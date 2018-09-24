@@ -23,7 +23,7 @@ class FakeDB {
 	}
 	
 	get(type, id) {
-		return this.data[type][id]; 
+		return (this.data[type] || {})[id]; 
 	}
 	
 	insert(type, record) {
