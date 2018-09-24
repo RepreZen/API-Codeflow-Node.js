@@ -20,6 +20,8 @@ public class NodeGenTemplateGenTemplate extends OpenApi3GenTemplate {
         defineOpenApi3Source();
         define(dynamicGenerator().named("controllers") //
                 .using(ControllersGenerator.class));
+        define(dynamicGenerator().named("Handlers") //
+                .using(HandlersGenerator.class));
         
     }
 }

@@ -5,12 +5,10 @@ import com.modelsolv.reprezen.generators.api.openapi3.OpenApi3DynamicGenerator
 import com.modelsolv.reprezen.generators.api.template.IGenTemplateContext
 import com.reprezen.kaizen.oasparser.model3.OpenApi3
 import com.reprezen.kaizen.oasparser.model3.Operation
-import com.reprezen.kaizen.oasparser.model3.Parameter
-import com.reprezen.kaizen.oasparser.model3.RequestBody
 import java.util.HashSet
 import java.util.List
 
-class ControllersGenerator extends OpenApi3DynamicGenerator {
+class HandlersGenerator extends OpenApi3DynamicGenerator {
 	extension ModelHelper = new ModelHelper
 	extension ModuleNameHelper = new ModuleNameHelper
 
@@ -32,22 +30,21 @@ class ControllersGenerator extends OpenApi3DynamicGenerator {
 		// skip already-generated operations
 		val ops = tagOps.filter[!generatedOps.contains(it)]
 		if (!ops.empty) {
-			new ControllersFile(context, tag.moduleName, ops.toList).generate()
+			new HandlersFile(context, tag.moduleName, ops.toList).generate()
 			generatedOps.addAll(ops)
 		}
 	}
 }
 
-class ControllersFile extends GeneratedFile {
-	extension ModelHelper = new ModelHelper
+class HandlersFile extends GeneratedFile {
 	extension MethodNameHelper = new MethodNameHelper
 	extension ParamsHelper = new ParamsHelper
-	
+
 	val List<Operation> operations
 	val String name
 
 	new(IGenTemplateContext context, String name, List<Operation> operations) {
-		super(context, true)
+		super(context, false)
 		this.name = name
 		this.operations = operations
 	}
@@ -55,46 +52,54 @@ class ControllersFile extends GeneratedFile {
 	override getContent() {
 		'''
 			// jshint esversion:6, latedef:nofunc
-			
-			const router = require('express').Router();
-			const «name»Handler = require('../handlers/«name»');
-			
-			«FOR op : operations SEPARATOR "\n"»
-				«op.getContent(name)»
-			«ENDFOR»
-			
-			function handle(res, response) {
-				res.status(response ? 200 : 201);
-				if (response) {
-					res.json(response);
+					
+			class «name»Handler {
+				constructor(db) {
+					this.db = db;
 				}
-			}
+				
+				«FOR op : operations SEPARATOR "\n"»
+					«op.getContent»
+				«ENDFOR»
+			}				
 			
-			module.exports = router;
+			«FOR paramName : operations.map[it.parameterNameList].flatten.toSet SEPARATOR "\n"»
+				«paramName.getValidatorSample»
+			«ENDFOR»
 		'''
 	}
 
-	def private getContent(Operation op, String moduleName) {
+	def private getContent(Operation op) {
 		'''
-			router.«op.method»('«op.path.expressPathString»', (req, res) => {
-				new «moduleName»Handler(req.app.locals.db).«op.methodName»(«op.argList.join(", ")»)
-				.then((response) => handle(res, response))
-				.catch((error) => res.status(error.code).send(error.message));
-			});
-		'''
-	}
-
-	def private getArgList(Operation op) {
-		op.allParameters.map[
-			switch it {
-				Parameter: it.expressExpr
-				RequestBody: "req.body"				
+			«op.methodName»(«op.parameterNameList») {
+				// sample code
+				try {
+					«FOR param : op.parameterNameList»
+						«param» = validate_«param»(«param»)
+					«ENDFOR»
+				} catch(error) {
+					return Promise.reject(error);
+				}
+				let result = null; // compute desired result
+				return Promise.resolve(result);
 			}
-		]
+		'''
+	}
+
+	def private getValidatorSample(String name) {
+		'''
+			function validate_«name»(«name») {
+				// check and/or alter parameter value as needed.
+				// return value to be used in handler, or throw
+				// an exception of the form {code, message} if
+				// validation fails
+				return «name»;
+			}
+		'''
 	}
 
 	override getRelativeFile() {
-		return '''controllers/«name».js'''
+		return '''handlers/«name».js'''
 	}
 
 }
