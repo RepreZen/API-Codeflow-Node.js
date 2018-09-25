@@ -42,7 +42,7 @@ class AppFile extends GeneratedFile {
 			config.envSet("host", "APP_HOST", «param("host", "localhost")»);
 			config.envSet("overrideOrigin", "APP_OVERRIDE_ORIGIN", «param("overrideOrigin", true)»);
 			config.envSet("pathPrefix", "APP_PATH_PREFIX", «param("pathPrefix","")»);
-			config.envSet("suiPath", "APP_SWAGGER_UI_PATH", «param("suiPath", "/api")»);
+			config.envSet("suiPath", "APP_SWAGGER_UI_PATH", «param("swaggerUIPath", "/api")»);
 			config.envSet("modelFile", "APP_MODEL_FILE", «param("modelFile", "swagger.yaml")»);
 			config.envSet("publicFolder", "APP_PUBLIC_FOLDER", «param("publicFolder", "public")»);
 			config.envSet("useFakeDB", "APP_USE_FAKE_DB", «param("useFakeDB", true)»);
@@ -104,6 +104,8 @@ class AppFile extends GeneratedFile {
 					value
 				default: '''"«value.toString»"'''
 			}
+		} else {
+			value = "null"
 		}
 		value
 	}
