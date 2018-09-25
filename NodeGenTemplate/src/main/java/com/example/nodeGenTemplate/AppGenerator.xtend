@@ -16,7 +16,7 @@ class AppGenerator extends AbstractDynamicGenerator<OpenApiDocument> {
 class AppFile extends GeneratedFile {
 	extension ModelHelper = new ModelHelper
 	extension ModuleNameHelper = new ModuleNameHelper
-	
+
 	val private OpenApi3 model
 
 	new(OpenApiDocument model, IGenTemplateContext context) {
@@ -40,7 +40,8 @@ class AppFile extends GeneratedFile {
 			let config = new Config();
 			config.envSet("port", "APP_PORT", «param("port", 3000)»);
 			config.envSet("host", "APP_HOST", «param("host", "localhost")»);
-			config.envSet("pathPrefix", "APP_PATH_PREFIX", «param("prefix","")»);
+			config.envSet("overrideOrigin", "APP_OVERRIDE_ORIGIN", «param("overrideOrigin", true)»);
+			config.envSet("pathPrefix", "APP_PATH_PREFIX", «param("pathPrefix","")»);
 			config.envSet("suiPath", "APP_SWAGGER_UI_PATH", «param("suiPath", "/api")»);
 			config.envSet("modelFile", "APP_MODEL_FILE", «param("modelFile", "swagger.yaml")»);
 			config.envSet("publicFolder", "APP_PUBLIC_FOLDER", «param("publicFolder", "public")»);
@@ -87,21 +88,20 @@ class AppFile extends GeneratedFile {
 	}
 
 	def param(String name, Object defaultValue) {
-		context.genTargetParameters.get(name) ?: {
-			if (defaultValue !== null) {
-				switch defaultValue {
-					String: '''"«defaultValue»"'''
-					Number:
-						defaultValue
-					Boolean:
-						defaultValue	
-					default:
-						'''"«defaultValue.toString»"'''
-				}
-			} else {
-				"null"
+		println(#[name, defaultValue, defaultValue?.class])
+		var value = context.genTargetParameters.get(name) ?: defaultValue
+		if (value !== null) {
+			value = switch value {
+				String: '''"«value»"'''
+				Number:
+					value
+				Boolean:
+					value
+				default: '''"«value.toString»"'''
 			}
 		}
+		println(value)
+		value
 	}
 
 	override getRelativeFile() {
