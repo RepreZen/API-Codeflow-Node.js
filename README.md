@@ -169,6 +169,8 @@ To check out final the implementation from the repo, use this command, from the 
 git checkout origin/04.implement -- workspace/PetStoreService
 ```
 
+You'll need to refresh the `PetStoreService` again to see the changes in API Studio.
+
 The basic design of the handlers goes like this:
 
 * Each controller method implements the logic for a single operation defined in the model.
@@ -211,7 +213,7 @@ Missing from the API mdoels is an operation that allows modification of selected
 2. Rerun the generator. Everything but the handler files will be refreshed and will reflect the additional operation.
 3. Add a handler for the new patch method to the handler file (the corresponding controller will already be updated.)
 
-To check out a working implementation from the demo repository, use the following command:
+To check out a working implementation from the demo repository, use the following command (then refresh `PetStoreService` project):
 
 ```
 git checkout origin/05.patch -- workspace/PetStoreService 'workspace/Expanded Pet Store (v3)/models'
