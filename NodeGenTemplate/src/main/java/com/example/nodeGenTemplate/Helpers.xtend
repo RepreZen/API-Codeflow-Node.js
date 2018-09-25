@@ -6,7 +6,6 @@ import com.reprezen.kaizen.oasparser.model3.Operation
 import com.reprezen.kaizen.oasparser.model3.Parameter
 import com.reprezen.kaizen.oasparser.model3.Path
 import com.reprezen.kaizen.oasparser.model3.RequestBody
-import com.reprezen.kaizen.oasparser.model3.Tag
 import com.reprezen.kaizen.oasparser.ovl3.PathImpl
 import java.util.ArrayList
 import java.util.HashMap
@@ -110,6 +109,11 @@ abstract class NameHelper<T> {
 		usedNames.add(result)
 		result
 	}
+	
+	def reset() {
+		usedNames.clear
+		nameMap.clear
+	}
 }
 
 class ModuleNameHelper extends NameHelper<String> {
@@ -128,25 +132,16 @@ class ModuleNameHelper extends NameHelper<String> {
 	}
 }
 
-class MethodNameHelper extends NameHelper<Pair<Operation, Tag>> {
+class MethodNameHelper extends NameHelper<Operation> {
 
 	extension ModelHelper = new ModelHelper
 
 	def getMethodName(Operation op) {
-		return getName(Pair.of(op, null as Tag))
+		return getName(op)
 	}
 
-	def getMethodName(Operation op, Tag tag) {
-		return getName(Pair.of(op, tag))
-	}
-
-	override protected getPreferredName(Pair<Operation, Tag> op_tag) {
-		val op = op_tag.key
-		val tag = op_tag.value
-		op.operationId ?: {
-			val base = (tag?.name ?: op.path.name)
-			'''«base»_«op.method»'''
-		}
+	override protected getPreferredName(Operation op) {
+		op.operationId ?: '''«op.path.name»_«op.method»'''
 	}
 }
 
@@ -167,7 +162,7 @@ class ParamNameHelper extends NameHelper<Parameter> {
 }
 
 class ParamsHelper {
-	extension ParamNameHelper = new ParamNameHelper
+	extension ParamNameHelper paramNameHelper = new ParamNameHelper
 	extension ModelHelper = new ModelHelper
 
 	def getParamName(Parameter param) {
@@ -204,5 +199,9 @@ class ParamsHelper {
 			case "header": '''req.header("«varName»")'''
 			case "cookie": '''req.cookies.«varName»'''
 		}
+	}
+	
+	def reset() {
+		paramNameHelper.reset
 	}
 }

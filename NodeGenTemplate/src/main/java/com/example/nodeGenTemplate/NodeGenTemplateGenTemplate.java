@@ -42,6 +42,9 @@ public class NodeGenTemplateGenTemplate extends OpenApiGenTemplate {
         define(parameter().named("publicFolder") //
         		.withDescription("Folder from which to serve static public content.")
         		.withDefault("public"));
+        define(parameter().named("useFakeDB") //
+        		.withDescription("Whether to make use of provided FakeDB module instead of a real database.")
+        		.withDefault(true));
         define(parameter().named("preloadDataFile") //
         		.withDescription("Path to look for a .js file that defines data to",
         				"be preloaded into the FakeDB database") //

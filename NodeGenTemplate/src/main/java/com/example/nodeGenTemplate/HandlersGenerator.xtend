@@ -20,7 +20,7 @@ class HandlersGenerator extends AbstractDynamicGenerator<OpenApiDocument> {
 
 class HandlersFile extends GeneratedFile {
 	extension MethodNameHelper = new MethodNameHelper
-	extension ParamsHelper = new ParamsHelper
+	extension ParamsHelper paramsHelper = new ParamsHelper
 
 	val List<Operation> operations
 	val String name
@@ -55,6 +55,7 @@ class HandlersFile extends GeneratedFile {
 	}
 
 	def private getContent(Operation op) {
+		paramsHelper.reset
 		'''
 			«op.methodName»(«op.parameterNameList.join(", ")») {
 				// sample code

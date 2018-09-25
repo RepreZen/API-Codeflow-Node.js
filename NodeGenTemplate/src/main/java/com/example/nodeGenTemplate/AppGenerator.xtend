@@ -45,11 +45,13 @@ class AppFile extends GeneratedFile {
 			config.envSet("suiPath", "APP_SWAGGER_UI_PATH", «param("suiPath", "/api")»);
 			config.envSet("modelFile", "APP_MODEL_FILE", «param("modelFile", "swagger.yaml")»);
 			config.envSet("publicFolder", "APP_PUBLIC_FOLDER", «param("publicFolder", "public")»);
+			config.envSet("useFakeDB", "APP_USE_FAKE_DB", «param("useFakeDB", true)»);
 			config.envSet("localDataFile", "APP_INITIAL_DATA_FILE", «param("dataFolder", null)»);
 			app.locals.config = config;
 			let conf = config.get();
 			
 			app.use(express.static(conf.publicFolder));
+			
 			app.use(conf.suiPath, swaggerUi.serve);
 			app.use(conf.suiPath, swaggerUi.setup(null, {
 				swaggerUrl: conf.modelFile,
@@ -68,11 +70,15 @@ class AppFile extends GeneratedFile {
 						}`)
 				}
 			}));
+			
 			app.use(require('body-parser').json());
 			app.use(require('body-parser').urlencoded({extended: false}));
 			app.use(require('cookie-parser')());
-			let dataFile = conf.localDataFile ? path.resolve(__dirname, conf.localDataFile) : null; 
-			app.locals.db = new FakeDB(dataFile);
+
+			if (conf.useFakeDB) {
+				let dataFile = conf.localDataFile ? path.resolve(__dirname, conf.localDataFile) : null; 
+				app.locals.db = new FakeDB(dataFile);
+			}
 			
 			let subapp = conf.pathPrefix ? express() : app;
 			«FOR tag : model.operationsByTag.keySet»

@@ -11,26 +11,29 @@ import java.util.List
 
 class ControllersGenerator extends AbstractDynamicGenerator<OpenApiDocument> {
 	extension ModelHelper = new ModelHelper
-	extension ModuleNameHelper = new ModuleNameHelper
 
 	override generate(OpenApiDocument model) throws GenerationException {
 		for (entry: model.asKaizenOpenApi3.operationsByTag.entrySet) {
-			new ControllersFile(context, entry.key.moduleName, entry.value).generate			
+			new ControllersFile(context, entry.key, entry.value).generate			
 		}
 	}
 }
 
 class ControllersFile extends GeneratedFile {
 	extension ModelHelper = new ModelHelper
+	extension ModuleNameHelper = new ModuleNameHelper
 	extension MethodNameHelper = new MethodNameHelper
-	extension ParamsHelper = new ParamsHelper
+	extension ParamsHelper paramsHelper = new ParamsHelper
 	
 	val List<Operation> operations
+	val String tag
 	val String name
+	
 
-	new(IGenTemplateContext context, String name, List<Operation> operations) {
+	new(IGenTemplateContext context, String tag, List<Operation> operations) {
 		super(context, true)
-		this.name = name
+		this.tag = tag
+		this.name = tag.moduleName
 		this.operations = operations
 	}
 
@@ -58,6 +61,7 @@ class ControllersFile extends GeneratedFile {
 	}
 
 	def private getContent(Operation op, String moduleName) {
+		paramsHelper.reset
 		'''
 			router.«op.method»('«op.path.expressPathString»', (req, res) => {
 				new «moduleName»Handler(req.app.locals.db).«op.methodName»(«op.argList.join(", ")»)
