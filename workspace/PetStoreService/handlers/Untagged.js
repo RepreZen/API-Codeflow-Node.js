@@ -7,88 +7,106 @@ class UntaggedHandler {
 	}
 	
 	findPets(tags, limit) {
-		// sample code
 		try {
 			tags = validate_tags(tags);
 			limit = validate_limit(limit);
 		} catch(error) {
 			return Promise.reject(error);
 		}
-		let result = null; // compute desired result
-		return Promise.resolve(result);
+		let results = [];
+		let tagFilter = (pet) => !tags || (pet.tag && tags.indexOf(pet.tag) >= 0);
+		if (limit > 0) {
+			for (let pet of this.db.select('Pet')) {
+				if (tagFilter(pet)) {
+					results.push(pet);
+					if (results.length === limit) {
+						break;
+					}
+				}
+			}
+		}
+		return Promise.resolve(results);
 	}
 	
-	addPet(body) {
-		// sample code
+	addPet(pet) {
 		try {
-			body = validate_body(body);
+			pet = validate_pet(pet);
 		} catch(error) {
 			return Promise.reject(error);
 		}
-		let result = null; // compute desired result
-		return Promise.resolve(result);
+		// insert pet and get back pet with assigned id
+		pet = this.db.insert('Pet', pet); 
+		return Promise.resolve(pet);
 	}
 	
 	find_pet_by_id(id) {
-		// sample code
 		try {
 			id = validate_id(id);
 		} catch(error) {
 			return Promise.reject(error);
 		}
-		let result = null; // compute desired result
-		return Promise.resolve(result);
+		let pet = this.db.get('Pet', id);
+		console.log(pet, id);
+		if (pet) {
+			return Promise.resolve(pet);
+		} else {
+			return Promise.reject({code: 404, message: "no such pet"});
+		}
 	}
 	
 	deletePet(id) {
-		// sample code
 		try {
 			id = validate_id(id);
 		} catch(error) {
 			return Promise.reject(error);
 		}
-		let result = null; // compute desired result
-		return Promise.resolve(result);
+		this.db.remove('Pet', id);
+		return Promise.resolve({code: 204});
 	}
 }				
 
 function validate_tags(tags) {
-	// check and/or alter parameter value as needed.
-	// return value to be used in handler, or throw
-	// an exception of the form {code, message} if
-	// validation fails
+	// style:form, explode: false => comma-separated values
+	if (tags !== undefined) {
+		// split on commas, trim tags, omit empty tags
+		tags = tags.split(",").map(s=>s.trim()).filter(s=>!!s);
+	}
 	return tags;
 }
 
 function validate_limit(limit) {
-	// check and/or alter parameter value as needed.
-	// return value to be used in handler, or throw
-	// an exception of the form {code, message} if
-	// validation fails
+	// if no limit provided, we set it to +INF
+	if (limit === undefined) {
+		limit = Number.POSITIVE_INFINITY;
+	} else if (!/^[0-9]+$/.test(limit)) {
+		throw {code: 400, message: "limit must be a non-negative integer"};
+	} else {
+		limit = Number.parseInt(limit);
+	}
 	return limit;
 }
 
-function validate_body(body) {
-	// check and/or alter parameter value as needed.
-	// return value to be used in handler, or throw
-	// an exception of the form {code, message} if
-	// validation fails
-	return body;
-}
-
-function validate_id_1(id_1) {
-	// check and/or alter parameter value as needed.
-	// return value to be used in handler, or throw
-	// an exception of the form {code, message} if
-	// validation fails
-	return id_1;
+function validate_pet(pet) {
+	if (typeof(pet) !== "object") {
+		throw {code: 400, message: "pet in request payload must be a JSON object"};
+	} else if (pet.name === undefined) {
+		throw {code: 400, message: "pet name is required"};
+	} else if (typeof(pet.name) !== "string") {
+		throw {code: 400, message: "pet name must be a string"};
+	} else if (pet.tag !== undefined && typeof(pet.tag) !== "string") {
+		throw {code: 400, message: "pet tag must be a string"};
+	}
+	return pet;
 }
 
 function validate_id(id) {
-	// check and/or alter parameter value as needed.
-	// return value to be used in handler, or throw
-	// an exception of the form {code, message} if
-	// validation fails
+	if (id === undefined) {
+		throw {code: 400, message: "pet id is required"};
+	} else if (!/^[0-9]+$/.test(id)) {
+		throw {code: 400, message: "pet id must be a non-negative integer"};
+	} else {
+		id = Number.parseInt(id);
+	}
 	return id;
 }
 
