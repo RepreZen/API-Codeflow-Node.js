@@ -36,13 +36,14 @@ class FakeDB {
 	}
 	
 	update(type, id, record) {
-		let record = this.data[type][id];
-		if (record) {
-			record = Object.assign(existing, record, {id});
-			this.data[type][id] = record 
+		let existing = this.get(type, id);
+		if (existing) {
+			let updated = Object.assign(existing, record, {id});
+			this.data[type][id] = updated
+			return updated;
+		} else {
+			return null;
 		}
-		return record;
-
 	}
 	
 	remove(type, id) {
