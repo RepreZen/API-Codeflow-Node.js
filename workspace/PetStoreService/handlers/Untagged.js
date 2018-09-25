@@ -30,7 +30,7 @@ class UntaggedHandler {
 	
 	addPet(pet) {
 		try {
-			pet = validate_pet(pet);
+			pet = validate_pet(pet, true);
 		} catch(error) {
 			return Promise.reject(error);
 		}
@@ -63,7 +63,23 @@ class UntaggedHandler {
 		this.db.remove('Pet', id);
 		return Promise.resolve({code: 204});
 	}
-}				
+	
+	updatePet(id, pet) {
+		try {
+			id = validate_id(id);
+			pet = validate_pet(pet, false);
+		} catch (error) {
+			return Promise.reject(error);
+		}
+		let result = this.db.update('Pet', id, pet);
+		if (result) {
+			return Promise.resolve(result);
+		} else {
+			return Promise.reject({code: 404, message: "no such pet"});
+		}
+	}
+}
+
 
 function validate_tags(tags) {
 	// style:form, explode: false => comma-separated values
@@ -86,12 +102,12 @@ function validate_limit(limit) {
 	return limit;
 }
 
-function validate_pet(pet) {
+function validate_pet(pet, enforceRequired) {
 	if (typeof(pet) !== "object") {
 		throw {code: 400, message: "pet in request payload must be a JSON object"};
-	} else if (pet.name === undefined) {
+	} else if (enforceRequired && pet.name === undefined) {
 		throw {code: 400, message: "pet name is required"};
-	} else if (typeof(pet.name) !== "string") {
+	} else if (pet.name !== undefined && typeof(pet.name) !== "string") {
 		throw {code: 400, message: "pet name must be a string"};
 	} else if (pet.tag !== undefined && typeof(pet.tag) !== "string") {
 		throw {code: 400, message: "pet tag must be a string"};

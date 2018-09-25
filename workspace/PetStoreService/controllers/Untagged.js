@@ -28,6 +28,12 @@ router.delete('/pets/:id', (req, res) => {
 	.catch((error) => res.status(error.code).json(error));
 });
 
+router.patch('/pets/:id', (req, res) => {
+	new UntaggedHandler(req.app.locals.db).updatePet(req.params.id, req.body)
+	.then((response) => handle(res, response))
+	.catch((error) => res.status(error.code).json(error));
+});
+
 function handle(res, response) {
 	if (response == null || typeof(response) !== "object" || !response.code) {
 		response = {
