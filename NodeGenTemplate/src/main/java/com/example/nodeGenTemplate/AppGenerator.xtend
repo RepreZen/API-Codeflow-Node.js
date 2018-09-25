@@ -88,7 +88,6 @@ class AppFile extends GeneratedFile {
 	}
 
 	def param(String name, Object defaultValue) {
-		println(#[name, defaultValue, defaultValue?.class])
 		var value = context.genTargetParameters.get(name) ?: defaultValue
 		if (value !== null) {
 			value = switch value {
@@ -100,7 +99,6 @@ class AppFile extends GeneratedFile {
 				default: '''"«value.toString»"'''
 			}
 		}
-		println(value)
 		value
 	}
 
