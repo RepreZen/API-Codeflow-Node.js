@@ -221,6 +221,9 @@ git checkout origin/05.patch -- workspace/PetStoreService 'workspace/Expanded Pe
 
 And that's it. At that point you should be able to re-launch the application and make use of the nifty new patch method.
 
+_Note_: If you attempt to re-launch the app and see an error message indicating that the port is already in use, it's because your prior launch is still running and still listening on port 3000. To terminate that launch, open the _Console_ view (use _Window -> Show view -> Other..._ and then select the _General/Console_ view and click _Open_.) Near the right end of that view's toolbar, open the _Display Selected Console_ menu, and select a console labled _PetStoreService..._ that is not marked as _terminated_. You'll then see a square red toolbar button that you can use to terminate the launch. At that point you should be able to successfully re-launch the service app.
+
+
 ### More
 
 THe next thing that I'll add to this demo is provisioning preloaded data in the internal database. You may have noticed the `preloadDataFile`
