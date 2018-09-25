@@ -33,8 +33,8 @@ generator lacks a number of useful features, but it does include all of the foll
 
 ### Overview
 
-The demo proceeds in five phases (plus a set-up phase). There are branches defined for each phase, which you can use to quickly bring your
-workspace up to that point of the demo, rather than manually working through each step.
+The demo proceeds in five phases (plus a set-up phase). ~~There are branches defined for each phase, which you can use to quickly bring your
+workspace up to that point of the demo, rather than manually working through each step.~~ _Note: the canned branches currently do not work properly becaues of maven `pom.xml` files in the example model project created in phase 2. These files include absolute paths that depend on the location of the working tree of this demo repository, and of course these will differ for anyone attempting to follow the demo. Fixing this will require changes to RepreZen API Studio, so until these changes are made, we will use ~~strike-through~~ formatting to deprecate use of these canned branches. Fortunately, nearly all the demo steps are easy to perform manually, and where they are not, the instructions will indicate how to make selective use of the canned branches to complete the demo._
 
 The phases are:
 
@@ -91,7 +91,7 @@ on some of the folders inside the the main _NodeGenTemplate_ project folder. If 
 
 ### Phase 2 - Design
 
-_The end state of this phase is captured in branch `02.petstore`._
+_~~The end state of this phase is captured in branch `02.petstore`.~~_
 
 We won't actually design a model here. Instead, we'll just use one of the OpenApi3 models available from the API Studio Examples Wizard.
 
@@ -111,7 +111,7 @@ Follow these steps:
 
 ### Phase 3 - THe Pet Store Service
 
-_The end state of this phase is captured in branch `03.service`._
+_~~The end state of this phase is captured in branch `03.service`.~~_
 
 This is where we'll generate code for the model we... er... designed, in phase 2. We'll arrange for the generated files to land directly in a
 Node.js project that we set up for that purpose. Regeneration cycles will all continue to feed into that project.
@@ -146,9 +146,11 @@ service to properly recognize requests sent from Swagger-UI.
 _NodeGenTemplate` generator, the menu should show that as the generator to run. If not, click instead on the small arrow to the right, and select
 _NodeGenTemplate_ from the list of targets.)
 
+9. Even though the service project files are now present, they will not appear in Project Explorer until you cause a refresh of the project files. Right-click on `PetStoreProject` in _Project Explorer_ and then select _Refresh_ to do this.
+
 ### Phase 4 - Implementing Business Logic
 
-_The end state of this phase is captured in branch `04.implement`._
+_~~The end state of this phase is captured in branch `04.implement`.~~_
 
 Now it's time to write the code that will implement the business logic of our API service.
 
@@ -158,8 +160,14 @@ this allows the overall implementation code base to be split into more manageabl
 handlers ended up in a single `Untagged` source file.
 
 If you're reasonably proficient with Javascript, Node.js and Express.js, you may want to take a crack at this yourself. But you can also skip
-forward by chekcing out branch `04.implement`. In tha case you may want to take a look at the before and after images of
+forward by chekcing out the necessary files from branch `04.implement` of the demo repo. In tha case you may want to take a look at the before and after images of
 `handlers/Untagged.js`, just to get a sense of what's going on.
+
+To check out final the implementation from the repo, use this command, from the root of your working tree:
+
+```
+git checkout 04.implement -- workspace/PetStoreService
+```
 
 The basic design of the handlers goes like this:
 
@@ -194,7 +202,7 @@ and requests will be directed to your running instance, regardless of thes serve
 
 ### Phase 5 - Iterate
 
-_The end state of this phase is captured in branch `05.patch`._
+_~~The end state of this phase is captured in branch `05.patch`.~~_
 
 Missing from the API mdoels is an operation that allows modification of selected properties of a pet. In phase 5 we add a `patch` operation  to the
 `/pets/{petId}` path. The steps are:
@@ -202,6 +210,12 @@ Missing from the API mdoels is an operation that allows modification of selected
 1. Add the operation to the model file, `petstore-expanded.yaml` in the model project.
 2. Rerun the generator. Everything but the handler files will be refreshed and will reflect the additional operation.
 3. Add a handler for the new patch method to the handler file (the corresponding controller will already be updated.)
+
+To check out a working implementation from the demo repository, use the following command:
+
+```
+git checkout 05.patch -- workspace/PetStoreService 'workspace/Expanded Pet Store (v3)/models'
+```
 
 And that's it. At that point you should be able to re-launch the application and make use of the nifty new patch method.
 
