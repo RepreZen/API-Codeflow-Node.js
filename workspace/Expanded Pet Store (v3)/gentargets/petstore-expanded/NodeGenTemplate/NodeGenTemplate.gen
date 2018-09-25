@@ -1,7 +1,7 @@
 ---
 name: "NodeGenTemplate"
 genTemplateId: "com.example.nodeGenTemplate.NodeGenTemplateGenTemplate"
-relativeOutputDir: generated
+relativeOutputDir: ../../../../PetStoreService
 prerequisites: null
 primarySource: 
   path: "../../../models/petstore-expanded.yaml"
@@ -20,10 +20,10 @@ parameters:
   
   # Path prefix added to each path for routing.
   # This can be used to match the server defined in the model for Swagger-UI testing.
-  pathPrefix: null
+  pathPrefix: "/api"
   
   # GET request path to deliver Swagger-UI.
-  swaggerUIPath: "/api"
+  swaggerUIPath: "/api-ui"
   
   # URL path for delivering model file
   # The file is saved and served out of the public folder
