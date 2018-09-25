@@ -50,9 +50,17 @@ class ControllersFile extends GeneratedFile {
 			«ENDFOR»
 			
 			function handle(res, response) {
-				if (!res.headersSent) {
-					res.status(response === undefined ? 201 : 200);
-					return response === undefined ? res.end() : res.json(response);
+				if (response == null || typeof(response) !== "object" || !response.code) {
+					response = {
+						code: response === undefined ? 201 : 200,
+						value: response
+					};
+				}
+				res.status(response.code);
+				if (response.value === undefined) {
+					res.end() 
+				} else {
+					res.json(response.value);
 				}
 			}
 			
@@ -83,5 +91,4 @@ class ControllersFile extends GeneratedFile {
 	override getRelativeFile() {
 		return '''controllers/«name».js'''
 	}
-
 }
