@@ -126,7 +126,7 @@ Follow these steps:
 
 4. In your model project, locate the `petstore-expanded.yaml` file in the `models` folder, and click on it.
 
-5. Click on the _Create a New GenTarget` button in the toolbar, just to the left of the _Generate_ button/menu.
+5. Click on the _Create a New GenTarget_ button in the toolbar, just to the left of the _Generate_ button/menu. (Note: If you do not see this in the toolbar, be sure that you are in the **RepreZen** perspective, by clicking on the appropriate button the far right of the toolbar.)
 
 6. Type "node" in the resulting dialog's search box, and you should see our **NodeGenTempalte** generator. Select it and press _Finish_. A new
 GenTarget is created in your project, and the `.gen` file that describes it opens in an editor.
@@ -166,7 +166,7 @@ forward by chekcing out the necessary files from branch `04.implement` of the de
 To check out final the implementation from the repo, use this command, from the root of your working tree:
 
 ```
-git checkout 04.implement -- workspace/PetStoreService
+git checkout origin/04.implement -- workspace/PetStoreService
 ```
 
 The basic design of the handlers goes like this:
@@ -214,7 +214,7 @@ Missing from the API mdoels is an operation that allows modification of selected
 To check out a working implementation from the demo repository, use the following command:
 
 ```
-git checkout 05.patch -- workspace/PetStoreService 'workspace/Expanded Pet Store (v3)/models'
+git checkout origin/05.patch -- workspace/PetStoreService 'workspace/Expanded Pet Store (v3)/models'
 ```
 
 And that's it. At that point you should be able to re-launch the application and make use of the nifty new patch method.
