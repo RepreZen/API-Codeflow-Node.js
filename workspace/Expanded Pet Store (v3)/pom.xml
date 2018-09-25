@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.modelsolv.reprezen.generators</groupId>
+    <artifactId>expanded-pet-store--v3-</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>Expanded Pet Store (v3)</name>
+    <packaging>pom</packaging>
+    <properties>
+        <reprezen.version>[1.6.11.9445,2.0)</reprezen.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <shared.gentemplates.dir>/home/andy/git/API-Codeflow-Node.js/workspace/shared/GenTemplates</shared.gentemplates.dir>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.modelsolv.reprezen</groupId>
+            <artifactId>com.modelsolv.reprezen.generators.api</artifactId>
+            <version>${reprezen.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.modelsolv.reprezen</groupId>
+            <artifactId>com.modelsolv.reprezen.generators.xtend</artifactId>
+            <version>${reprezen.version}</version>
+        </dependency>
+
+        <!--  Provided generators -->
+        <dependency>
+            <groupId>com.modelsolv.reprezen</groupId>
+            <artifactId>com.modelsolv.reprezen.generators.standard</artifactId>
+            <version>${reprezen.version}</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+		<repository>
+			<id>reprezen-repo-releases</id>
+			<url>http://maven.reprezen.com/repository/releases</url>
+			<layout>default</layout>
+		</repository>
+    </repositories>
+</project>

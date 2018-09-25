@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+	repositories {
+		maven {
+			url "http://maven.reprezen.com/repository/releases"
+		}
+		maven {
+			url "http://maven.reprezen.com/repository/eclipse/"
+		}
+		mavenCentral()
+	}
+	
+	dependencies {
+		compile ('com.modelsolv.reprezen:com.modelsolv.reprezen.generators.api:1.6.11.9445')
+		compile ('com.modelsolv.reprezen:com.modelsolv.reprezen.generators.xtend:1.6.11.9445') {
+		       exclude module: 'org.eclipse.equinox.bidi'
+		       exclude module: 'org.eclipse.emf.common.ui'
+		       exclude module: 'org.eclipse.e4.ui.workbench3'
+		       exclude module: 'org.apache.batik.css'
+		       exclude module: 'org.eclipse.e4.ui.css.swt'
+		}
+		compile ('com.modelsolv.reprezen:com.modelsolv.reprezen.generators.standard:1.6.11.9445')
+		compile fileTree(dir: '/home/andy/git/API-Codeflow-Node.js/workspace/shared/GenTemplates', include: ['*.jar'])
+		compile fileTree(dir: '/home/andy/git/API-Codeflow-Node.js/workspace/Expanded Pet Store (v3)/lib', include: ['*.jar'])
+	}
+	
+	task(execGenTarget, dependsOn: 'classes', type: JavaExec) {
+		main = 'com.modelsolv.reprezen.generators.api.util.GeneratorLauncher'
+		classpath = sourceSets.main.runtimeClasspath
+		args '/home/andy/git/API-Codeflow-Node.js/workspace/Expanded Pet Store (v3)/gentargets/petstore-expanded/Ruby Client/Ruby Client.gen'
+	}
+	
+	defaultTasks 'execGenTarget' 
