@@ -1,6 +1,6 @@
 # API CodeFlow Node.js
 
-This project serves as a demo for an [API CodeFlow[(http://rzen.io/APICodeFlow) approach to API
+This project serves as a demo for an [API CodeFlow](http://rzen.io/APICodeFlow) approach to API
 service implementation. This entails the following three steps,
 repeated as the API evolves:
 
