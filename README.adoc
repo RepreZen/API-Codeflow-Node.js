@@ -97,7 +97,7 @@ stand-alone installer offered in the sign-up process. Installation options are e
 Once you're up and running, you should install **Nodeclipse** from _Eclipse Marketplace_, which you can find on the Help menu. Follow the
 instructions, and after a restart you'll have added robust support for Node.js projects to the product.
 
-image::nodeclipse.png[Ecliplse Marketplace]
+image::nodeclipse.png[Eclipse Marketplace]
 
 WARNING: There is an unimportant conflict involving a particular feature required by Nodeclipse and
 already present (in a different version) in API Studio. During installation you'll be informed of
@@ -134,17 +134,19 @@ image::select-workspace.png[Select Workspace]
 
 3. API Studio will restart after you click the _Launch_ button.
 
-4. Use _File -> Import..._, and in the resulting dialog select the _Maven / Existing Maven Projects_ option and click _Next_. In the next panel,
-   use the _Browse_ button to locate your working directory and click _Next_. You should check tne _NodeGenTemplate_ project, and click _Finish_.
+4. Use _File -> Import..._, and in the resulting dialog select the _Maven / Existing Maven Projects_
+   option and click _Next_. In the next panel, use the _Browse_ button to locate your working
+   directory and click _Next_. You should check tne _NodeGenTemplate_ project, and click _Finish_.
 +
 image::import-maven.png[Import Maven Project]
 image::import-gentemplate.png[Import NodeGenTemplate]
 
 5. There will be small delay while this project builds for the first time on your machine.
 
-WARNING: In some cases, the initial build will not work correctly, due to a bug that we hope to remedy shortly. You will know this from red error markers
-on some of the folders inside the the main _NodeGenTemplate_ project folder. If you see them, right-cliick on that project folder, select _Run As
--> Maven build..._, and then type `compile` into the _Goal_ field before pressing _Run_.
+WARNING: In some cases, the initial build will not work correctly, due to a bug that we hope to
+remedy shortly. You will know this from red error markers on some of the folders inside the the main
+_NodeGenTemplate_ project folder. If you see them, right-cliick on that project folder, select _Run
+As -> Maven build..._, and then type `compile` into the _Goal_ field before pressing _Run_.
 
 === Phase 2 - Design
 
@@ -195,10 +197,10 @@ image::service-project.png[Create PetStoreService Project]
 5. Click on the _Create a New GenTarget_ button in the toolbar, just to the left of the _Generate_
 button/menu.
 +
+image::create-gentarget.png[Create GenTarget]
++
 TIP: If you do not see this in the toolbar, be sure that you are in the **RepreZen** perspective, by
 clicking on the appropriate button on the far right of the toolbar: image:reprezen-perspective.png[].
-+
-image::create-gentarget.png[Crate GenTarget]
 
 6. Type "node" in the resulting dialog's search box, and you should see our **NodeGenTempalte**
 generator. Select it and press _Finish_. A new GenTarget is created in your project, and the `.gen`
@@ -208,14 +210,16 @@ image::select-gentemplate.png[Select NodeGenTemplate]
 
 7. Make and save the following changes in this file:
 
-   a. Near the top, change the value for `relativeOutputDir` to
-`../../../../PetStoreService`. This is what will cause generated files to flow directly into the project we jsut created.
+   a. Near the top, change the value for `relativeOutputDir` to `../../../../PetStoreService`. This
+is what will cause generated files to flow directly into the project we jsut created.
 
-   b. Set `pathPrefix` to `/api`, to align with the path prefix listed in the first _server_ defined in our model. This will cause the running
-service to properly recognize and route requests sent from Swagger-UI.
+   b. Set `pathPrefix` to `/api`, to align with the path prefix listed in the first _server_ defined
+in our model. This will cause the running service to properly recognize and route requests sent from
+Swagger-UI.
 
-   c. Set `swaggerUIPath` to `api-ui`. The default, `/api`, clashes with the `pathPrefix` that is dictated by the server definition in our
-   model. (Of course, we could also just change that server definition to use a different path prefix, or just remove it altogether.)
+   c. Set `swaggerUIPath` to `api-ui`. The default, `/api`, clashes with the `pathPrefix` that is
+   dictated by the server definition in our model. (Of course, we could also just change that server
+   definition to use a different path prefix, or just remove it altogether.)
 +
 image::update-gentarget.png[Update GenTarget Definition]
 
@@ -231,6 +235,8 @@ until you cause a refresh of the project files. Right-click on `PetStoreProject`
 Explorer_ and then select _Refresh_ to do this.
 +
 image::refresh-service-proj.png[Refresh the Service Project]
+
+TIP: We'll be doing this a couple more times in later phases.
 
 === Phase 4 - Implementing Business Logic
 
@@ -273,8 +279,8 @@ The basic design of the handlers goes like this:
   the operation's own parameters. If the operation defines a `RequestBody` there will be a final
   `body` parameter.
 
-* The handler is expected return a new `Promise` that has either been `resolve`d to a value for the
-   response payload, or `reject`ed with an error object that should have `code` and `message`
+* The handler is expected return a new `Promise` that has either been _resolved_ to a value for the
+   response payload, or _rejected_ with an error object that should have `code` and `message`
    properties.
 * The non-error response can also be an object with `code` and `value` properties, in which case the
   `code` value will be used for the HTTP status code, and the `value` property will be used for the
@@ -308,7 +314,7 @@ to become available in the project, since the build itself is carried out in a s
 3. Right click on `app.js` in the service project, and select _Run As -> Node Application_. You
 should see a start-up message in a console pane that makes itself visible.
 +
-image::launch-app.png[Launch the Service App]
+image::launch-service-app.png[Launch the Service App]
 +
 image::listening.png[Service Listening Message]
 
