@@ -9,7 +9,7 @@
     <properties>
         <reprezen.version>[1.6.11.9445,2.0)</reprezen.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <shared.gentemplates.dir>/home/andy/git/API-Codeflow-Node.js/workspace/shared/GenTemplates</shared.gentemplates.dir>
+        <shared.gentemplates.dir>${project.basedir}/../shared/GenTemplates</shared.gentemplates.dir>
     </properties>
     <dependencies>
         <dependency>
