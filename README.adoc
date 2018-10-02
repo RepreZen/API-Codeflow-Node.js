@@ -1,4 +1,7 @@
-= API CodeFlow Node.js
+image::./images/API-CodeFlow-Logo-1024w.png[API CodeFlow Logo,50%]
+
+= Node.js Example
+
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
