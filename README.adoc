@@ -1,7 +1,4 @@
-image::./images/API-CodeFlow-Logo-1024w.png[API CodeFlow Logo,50%]
-
 = Node.js Example
-
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -13,6 +10,8 @@ endif::[]
 :toc-placement!:
 :linkattrs:
 :imagesdir: ./images
+
+image::API-CodeFlow-Logo-1024w.png[API CodeFlow Logo]
 
 This project serves as a demo for an http://rzen.io/APICodeFlow[API CodeFlow^] approach to API
 service implementation. This entails the following three steps,
