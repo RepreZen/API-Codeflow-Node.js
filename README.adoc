@@ -19,16 +19,16 @@ repeated as the API evolves:
 2. **Generate** stub code in Node.js (JavaScript).
 3. **Implement** your business logic.
 
-This demo will create a working API to manage a database of live pets for a pet store. (No animals have been harmed or killed in the creation of
-this demo.)
+This demo will create a working API to manage a database of live pets for a pet store. (No animals
+have been harmed in the creation of this demo.)
 
 toc::[]
 
 == Custom Code Generation
 
 A custom code generator was built especially for this demo, to show how you can tailor code
-generation to meet your specific needs. This code generator is not complet, in the sense that it
-lacks a number of useful features. However it does actually work, and it include all of the
+generation to meet your specific needs. This code generator is not complete, in the sense that it
+lacks a number of useful features. However it does actually work, and it includes all of the
 following:
 
 * Automatic generation of _controllers_ and _handlers_ for all operations defined by the API. The
@@ -71,6 +71,7 @@ git reset . ; git checkout .
 
 The phases are:
 
+[start=0]
 0. Setup - install and launch RepreZen API Studio, and install Nodeclipse from the Eclipse Marketplace, so you'll be able to work with Node.js
    code.
 
@@ -86,7 +87,7 @@ The phases are:
 
 So let's dig in!
 
-== Phase 0 - Setup
+=== Phase 0 - Setup
 
 If you don't already have RepreZen API Studio installed, you'll want to visit
 https://www.reprezen.com[the RepreZen website^] and sign up for a free trial.
@@ -202,7 +203,7 @@ image::create-gentarget.png[Create GenTarget]
 TIP: If you do not see this in the toolbar, be sure that you are in the **RepreZen** perspective, by
 clicking on the appropriate button on the far right of the toolbar: image:reprezen-perspective.png[].
 
-6. Type "node" in the resulting dialog's search box, and you should see our **NodeGenTempalte**
+6. Type "node" in the resulting dialog's search box, and you should see our **NodeGenTemplate**
 generator. Select it and press _Finish_. A new GenTarget is created in your project, and the `.gen`
 file that describes it opens in an editor.
 +
@@ -211,7 +212,7 @@ image::select-gentemplate.png[Select NodeGenTemplate]
 7. Make and save the following changes in this file:
 
    a. Near the top, change the value for `relativeOutputDir` to `../../../../PetStoreService`. This
-is what will cause generated files to flow directly into the project we jsut created.
+is what will cause generated files to flow directly into the project we just created.
 
    b. Set `pathPrefix` to `/api`, to align with the path prefix listed in the first _server_ defined
 in our model. This will cause the running service to properly recognize and route requests sent from
@@ -347,7 +348,7 @@ refresh the `PetStoreService` project again):
 git checkout origin/05.patch -- workspace/PetStoreService 'workspace/Expanded Pet Store (v3)/models'
 ```
 
-You'll find that another method has been added to the `handlers\Untagged.js` source file.
+You'll find that another method has been added to the `handlers/Untagged.js` source file.
 
 And that's it. At that point you should be able to re-launch the application and make use of the
 nifty new patch method.
