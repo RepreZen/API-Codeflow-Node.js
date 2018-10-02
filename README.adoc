@@ -11,7 +11,7 @@ endif::[]
 :linkattrs:
 :imagesdir: ./images
 
-image::API-CodeFlow-Logo-1024w.png[API CodeFlow Logo,50%]
+image::API-CodeFlow-Logo-1024w.png[API CodeFlow Logo,35%]
 
 This project serves as a demo for an http://rzen.io/APICodeFlow[API CodeFlow^] approach to API
 service implementation. This entails the following three steps,
